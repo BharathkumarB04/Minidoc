@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mr.MiniDoc - Medicine Recommendation System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(to right, #00c6ff, #0072ff);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: white;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
+            color: black;
+        }
+        .logo-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .logo-container img {
+            max-width: 120px;
+            border-radius: 50%;
+        }
+        .btn {
+            margin-top: 10px;
+            transition: 0.3s ease-in-out;
+        }
+        .btn:hover {
+            transform: scale(1.05);
+        }
+        .footer {
+            background-color: rgba(0, 0, 0, 0.2);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            margin-top: auto;
+        }
+        .footer a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        .social-icons a {
+            font-size: 20px;
+            margin: 0 10px;
+            color: white;
+            transition: 0.3s;
+        }
+        .social-icons a:hover {
+            color: #ffd700;
+            transform: scale(1.2);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container mt-5 p-4">
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo">
+        </div>
+        
+        <h2 class="text-center mb-4 text-primary">Mr.MiniDoc - Medicine Recommendation System</h2>
+        <form method="POST" class="p-3 shadow rounded">
+            <div class="mb-3">
+                <label class="form-label">Enter your symptoms (separate multiple symptoms with commas):</label>
+                <input type="text" name="symptoms" class="form-control" placeholder="e.g., fever, headache, cough" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Get Recommendation</button>
+        </form>
+        
+        {% if recommendation %}
+            <div class="mt-4 p-3 border rounded bg-light shadow">
+                <h4 class="text-success">Recommended Medicine:</h4>
+                <p><strong>{{ recommendation.medicine }}</strong></p>
+                <h5>Details:</h5>
+                <ul>
+                    {% for symptom, details in recommendation.details.items() %}
+                        <li><strong>{{ symptom.capitalize() }}</strong> - Dosage: {{ details.dosage }}, Notes: {{ details.note }}</li>
+                    {% endfor %}
+                </ul>
+                <p><strong>Matched Symptoms:</strong> {{ recommendation.matched_symptoms | join(', ') }}</p>
+                
+                <h5>Buy Here:</h5>
+                <div class="mt-3">
+                    {% if recommendation.links.Amazon %}
+                        <a href="{{ recommendation.links.Amazon }}" target="_blank" class="btn btn-warning btn-sm">Buy on Amazon</a>
+                    {% endif %}
+                    {% if recommendation.links['1mg'] %}
+                        <a href="{{ recommendation.links['1mg'] }}" target="_blank" class="btn btn-danger btn-sm">Buy on 1mg</a>
+                    {% endif %}
+                    {% if recommendation.links.Apollo %}
+                        <a href="{{ recommendation.links.Apollo }}" target="_blank" class="btn btn-success btn-sm">Buy on Apollo</a>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+        
+        <p class="text-muted mt-3 text-center">
+            <small>Disclaimer: This is a demo system. Always consult a doctor before taking any medicine.</small>
+        </p>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2025 Medicine Recommendation System. All rights reserved.</p>
+        <div class="social-icons">
+            <a href="https://www.facebook.com" target="_blank"><i class="fab fa-facebook"></i></a>
+            <a href="https://www.instagram.com" target="_blank"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.twitter.com" target="_blank"><i class="fab fa-twitter"></i></a>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
